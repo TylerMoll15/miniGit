@@ -1,9 +1,11 @@
 #include <iostream>
-#include <vector>
-#ifndef MINIGIT_H
-#define MINIGIT_H
+#include <filesystem>
 
 using namespace std;
+namespace fs = std::filesystem;
+
+#ifndef MINIGIT_H
+#define MINIGIT_H
 
 //each SLLnode pertains to a single file w/ in the commit
 struct SLLnode{
@@ -15,7 +17,7 @@ struct SLLnode{
 //each DLLnode pertains to a single commit w/ in the repo (all files in commit)
 struct DLLnode{
     int commitNumber;
-    SLLnode *head;
+    SLLnode *headLL;
     DLLnode *previous;
     DLLnode *next;
 };
@@ -23,14 +25,21 @@ struct DLLnode{
 //essentially the entire repository
 class DLL{
     private:
-        DLL* head;
+        DLLnode* head;
         int numberOfNodes;
+        //fs::path filePath;
+        string filePath;
     
     public:
+        ~DLL();
         void prettyPrint();
         string idToName(int commitNumber);
-        bool addDLLNode(SLLnode* head);
+        bool initialSetup();
+        bool addDLLNode();
         bool removeNode(int commitNumber);
+        string getLocation();
+        int getNumberOfNodes();
+        void addHead(int commitNumber, SLLnode* sllHead);
 };
 
 //the list of files in each commit
@@ -40,10 +49,14 @@ class SLL{
         int numberOfNodes;
     
     public:
+        ~SLL();
         void prettyPrint();
         bool addSLLNode(string fileName, string fileVersion);
         bool removeNode(string fileName);
-        
+        SLLnode* getHeadPointer(){return head;}
 };
 
+bool easymkdir(string filePathString);
+string easyQuestion(string prompt);
 #endif
+
