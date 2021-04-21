@@ -41,6 +41,8 @@ int main(){
     DLL newRepo;
     SLL newRepoFileList;
     bool isRunning = true;
+    SLLnode* curr;
+    ofstream fileVersion;
 
     cout << "Do you want to initialize a new repository? (y/n)" << endl;
     
@@ -130,7 +132,23 @@ int main(){
                 
                 break;
             case 3: //commit
-                
+                newRepo.addHead(newRepo.getNumberOfNodes(), newRepoFileList.getHeadPointer());
+
+                curr = newRepoFileList.getHeadPointer();
+                while(curr != nullptr){
+                    if(fs::exists(".minigit/" + curr->fileVersion)){
+                        cout << "File Exists!" << endl;
+                        curr->fileVersion = "__1__" + curr->fileName; //WIPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+                        copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                    }
+                    else{
+                        cout << "File doesn't exist, copying over" << endl;
+                        copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                    }
+                    curr = curr->next;
+                }
+                newRepoFileList.~SLL();
+                newRepo.addDLLNode();
                 
                 break;
             case 4: //checkout

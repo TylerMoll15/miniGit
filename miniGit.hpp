@@ -58,5 +58,6 @@ class SLL{
 
 bool easymkdir(string filePathString);
 string easyQuestion(string prompt);
+void copy(string from, string to);
 #endif
 

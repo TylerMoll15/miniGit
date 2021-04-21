@@ -28,6 +28,7 @@ bool SLL::addSLLNode(string filename_, string fileVersion_){
     SLLnode* newNode = new SLLnode;
     newNode->fileName = filename_;
     newNode->fileVersion = fileVersion_;
+    newNode->next = nullptr;
     bool addSuccess = false;
 
     if(head == nullptr){ //head is empty
@@ -90,6 +91,7 @@ SLL::~SLL(){
         curr = curr->next;
         delete prev;
     }
+    head = nullptr;
 }
 
 
@@ -210,4 +212,20 @@ string easyQuestion(string prompt){
     cout << "#> ";
     getline(cin, answer);
     return answer;
+}
+
+void copy(string from, string to){
+    ifstream file(from);
+    ofstream newFile(to);
+    string eachLine;
+
+    if(file.fail()){
+        cout << "File " << from << " not opened" << endl;
+    }
+    else{
+        while(getline(file, eachLine)){
+            newFile << eachLine;
+        }
+    }
+
 }
