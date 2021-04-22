@@ -227,5 +227,19 @@ void copy(string from, string to){
             newFile << eachLine;
         }
     }
+}
 
+bool fileEquivalence(string file1, string file2){
+    ifstream file1_(file1);
+    ifstream file2_(file2);
+
+    string file1Getline;
+    string file2Getline;
+    while(getline(file1_, file1Getline)){
+        getline(file2_, file2Getline);
+        if(file1Getline != file2Getline){
+            return false;
+        }
+    }
+    return true;
 }

@@ -75,6 +75,7 @@ int main(){
         bool valid = false;
         int choice = 0;
         string relevantString;
+        string newestFile;
         choiceSelection(choice);
 
         switch(choice){
@@ -133,15 +134,25 @@ int main(){
                 break;
             case 3: //commit
                 newRepo.addHead(newRepo.getNumberOfNodes(), newRepoFileList.getHeadPointer());
-
                 curr = newRepoFileList.getHeadPointer();
+                newestFile = "";
                 while(curr != nullptr){
-                    if(fs::exists(".minigit/" + curr->fileVersion)){
+                    if(fs::exists(".minigit/" + curr->fileVersion)){ //file exists in repository
                         cout << "File Exists!" << endl;
-                        curr->fileVersion = "__1__" + curr->fileName; //WIPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
-                        copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                        
+                        int versionNumber = 0;
+                        while(fs::exists(".minigit/" + curr->fileVersion)){ //finds what to change current file version to (eg if most recent __0__, this would make curr version __1__)
+                            versionNumber++;
+                            curr->fileVersion = "__" + to_string(versionNumber) + "__" + curr->fileName;
+                        }
+
+                        newestFile = "__" + to_string(versionNumber - 1) + "__" + curr->fileName;
+                        
+                        if(!fileEquivalence(".minigit/" + newestFile, curr->fileName)){ //if changes were made, make a new file with a unique version number
+                            copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                        }
                     }
-                    else{
+                    else{ //file version doesn't exist in repository
                         cout << "File doesn't exist, copying over" << endl;
                         copy(curr->fileName, ".minigit/" + curr->fileVersion);
                     }
@@ -187,6 +198,5 @@ int main(){
     // firstFileList.removeNode("Grapesggggg.txt");
 
     // firstFileList.prettyPrint();
-    // //firstRepo.prettyPrint();
-
+    //firstRepo.prettyPrint();
 }
