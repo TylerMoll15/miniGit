@@ -40,6 +40,7 @@ class DLL{
         string getLocation();
         int getNumberOfNodes();
         void addHead(int commitNumber, SLLnode* sllHead);
+        DLLnode* getHeadPointer(){return head;}
 };
 
 //the list of files in each commit
@@ -54,6 +55,7 @@ class SLL{
         bool addSLLNode(string fileName, string fileVersion);
         bool removeNode(string fileName);
         SLLnode* getHeadPointer(){return head;}
+        void clipHead();
 };
 
 bool easymkdir(string filePathString);

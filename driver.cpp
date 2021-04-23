@@ -43,6 +43,9 @@ int main(){
     bool isRunning = true;
     SLLnode* curr;
     ofstream fileVersion;
+    ofstream currentFile;
+    ifstream versionFile;
+    string eachLine = "";
 
     cout << "Do you want to initialize a new repository? (y/n)" << endl;
     
@@ -136,6 +139,7 @@ int main(){
                 
                 break;
             case 3: //commit
+                newRepo.addDLLNode();
                 newRepo.addHead(newRepo.getNumberOfNodes(), newRepoFileList.getHeadPointer());
                 curr = newRepoFileList.getHeadPointer();
                 newestFile = "";
@@ -159,18 +163,49 @@ int main(){
                     }
                     curr = curr->next;
                 }
-                newRepoFileList.~SLL();
-                newRepo.addDLLNode();
+                newRepoFileList.clipHead();
                 
                 break;
             case 4: //checkout
-                cout << "Checking out a commit..." << endl;
+                {
+                    relevantString = easyQuestion("Enter a commit number");
+
+                    DLLnode* curr = newRepo.getHeadPointer();
+
+                    while(curr != nullptr && curr->commitNumber != stoi(relevantString)){
+                        curr = curr->next;
+                    }
+
+                    if(curr == nullptr){
+                        cout << "Commit doesn't exist" << endl;
+                    }
+                    else{
+                        SLLnode* sllcurr = curr->headLL;
+                        while(sllcurr != nullptr){
+
+                            // fs::remove(sllcurr->fileName);
+                            // copy(".minigit/" + sllcurr->fileVersion, sllcurr->fileName);
+
+                            versionFile.close();
+                            versionFile.open(".minigit/" + sllcurr->fileVersion);
+                            currentFile.open(sllcurr->fileName);
+                            eachLine = "";
+                            
+
+                            while(getline(versionFile, eachLine)){
+                                currentFile << eachLine;
+                            }
+                            currentFile.close();
+                            sllcurr = sllcurr->next;
+                        }
+                    }
+                }
                 break;
             case 5: //quit
                 cout << "Bye!" << endl;
                 isRunning = false;
 
-                newRepoFileList.prettyPrint();
+                newRepo.prettyPrint();
                 break;
         }
     }
@@ -200,6 +235,6 @@ int main(){
 
     // firstFileList.prettyPrint();
     //firstRepo.prettyPrint();
-
-
 }
+
+///WOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO

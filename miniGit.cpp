@@ -94,6 +94,10 @@ SLL::~SLL(){
     head = nullptr;
 }
 
+void SLL::clipHead(){
+    head = nullptr;
+}
+
 
 //=========================================
 // DLL (repo) functions
@@ -139,9 +143,11 @@ int DLL::getNumberOfNodes(){
 
 bool DLL::addDLLNode(){
     DLLnode* newNode = new DLLnode;
+    numberOfNodes++;
     newNode->commitNumber = numberOfNodes;
     newNode->headLL = nullptr;
-    numberOfNodes++;
+    newNode->next = nullptr;
+    newNode->previous = nullptr;
 
     
     if(head == nullptr){ //head is empty
