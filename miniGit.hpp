@@ -60,5 +60,6 @@ bool easymkdir(string filePathString);
 string easyQuestion(string prompt);
 void copy(string from, string to);
 bool fileEquivalence(string file1, string file2);
+string findNewestFile(string fileName);
 #endif
 

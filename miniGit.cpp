@@ -105,7 +105,6 @@ bool DLL::initialSetup(){
     firstNode->next = nullptr;
     head = firstNode;
     numberOfNodes = 0;
-    numberOfNodes++;
 
     fs::remove_all(".minigit");
     easymkdir(".minigit");
@@ -235,11 +234,28 @@ bool fileEquivalence(string file1, string file2){
 
     string file1Getline;
     string file2Getline;
-    while(getline(file1_, file1Getline)){
-        getline(file2_, file2Getline);
+    while(getline(file2_, file1Getline)){
+        getline(file1_, file2Getline);
         if(file1Getline != file2Getline){
             return false;
         }
     }
+    file1_.close();
+    file2_.close();
+
     return true;
+}
+
+//finds newest existing version of a given file
+string findNewestFile(string file1){
+    int versionNumber = 0;
+    string newestFile = "__" + to_string(versionNumber) + "__" + file1;
+
+    while(fs::exists(".minigit/" + newestFile)){ //finds what to change current file version to (eg if most recent __0__, this would make curr version __1__)
+        versionNumber++;
+        newestFile = "__" + to_string(versionNumber) + "__" + file1;
+    }
+    newestFile = "__" + to_string(versionNumber - 1) + "__" + file1;
+
+    return newestFile;
 }

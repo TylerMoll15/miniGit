@@ -103,7 +103,10 @@ int main(){
                     else{
                         noError = true;
                         int fileVersion = 0;
-                        newRepoFileList.addSLLNode(relevantString, "__" + to_string(fileVersion) + "__" + relevantString);
+
+                        if(!fileEquivalence(".minigit/" + findNewestFile(relevantString), relevantString) || !fs::exists(".minigit/__" + to_string(0) + "__" + relevantString)){
+                            newRepoFileList.addSLLNode(relevantString, "__" + to_string(fileVersion) + "__" + relevantString);
+                        }
                         cout << endl;
                     }
                 }
@@ -148,9 +151,7 @@ int main(){
 
                         newestFile = "__" + to_string(versionNumber - 1) + "__" + curr->fileName;
                         
-                        if(!fileEquivalence(".minigit/" + newestFile, curr->fileName)){ //if changes were made, make a new file with a unique version number
-                            copy(curr->fileName, ".minigit/" + curr->fileVersion);
-                        }
+                        copy(curr->fileName, ".minigit/" + curr->fileVersion);
                     }
                     else{ //file version doesn't exist in repository
                         cout << "File doesn't exist, copying over" << endl;
@@ -199,4 +200,6 @@ int main(){
 
     // firstFileList.prettyPrint();
     //firstRepo.prettyPrint();
+
+
 }
