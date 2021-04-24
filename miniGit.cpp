@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
+#include <vector>
 
 
 using namespace std;
@@ -80,7 +81,7 @@ bool SLL::removeNode(string fileName){
         delete curr;
         return true;
     }
-} 
+}
 
 SLL::~SLL(){
     SLLnode* curr = head;
@@ -112,6 +113,7 @@ bool DLL::initialSetup(){
 
     fs::remove_all(".minigit");
     easymkdir(".minigit");
+    addDLLNode();
 
     return true;
 }
@@ -149,7 +151,8 @@ bool DLL::addDLLNode(){
     newNode->next = nullptr;
     newNode->previous = nullptr;
 
-    
+    SLL copyLast;    
+
     if(head == nullptr){ //head is empty
         head = newNode;
         return true;
@@ -204,6 +207,21 @@ void DLL::prettyPrint(){
         curr = curr->next;
     }
 }
+
+SLLnode* DLL::idToHeadLL(int commitNumber){
+    DLLnode* curr = head;
+
+    while(curr != nullptr && curr->commitNumber != commitNumber){
+        curr = curr->next;
+    }
+    if(curr == nullptr){
+        cout << "No commit " << commitNumber << " exists" << endl;
+        return nullptr;
+    }
+    else{
+        return curr->headLL;
+    }
+}
   
 //==========================================
 // General useful functions
@@ -231,24 +249,47 @@ void copy(string from, string to){
         while(getline(file, eachLine)){
             newFile << eachLine;
         }
+        file.close();
+        newFile.close();
     }
 }
 
 bool fileEquivalence(string file1, string file2){
-    ifstream file1_(file1);
-    ifstream file2_(file2);
+    vector<string> firstFileStringList;
+    vector<string> secondFileStringList;
+    bool equal;
 
-    string file1Getline;
-    string file2Getline;
-    while(getline(file2_, file1Getline)){
-        getline(file1_, file2Getline);
-        if(file1Getline != file2Getline){
+    fstream file1_;
+    file1_.open(file1);
+    string eachLine1;
+
+    fstream file2_;
+    file2_.open(file2);
+    string eachLine2;
+
+    while(file1_ >> eachLine1){
+        firstFileStringList.push_back(eachLine1);
+    }
+
+    while(file2_ >> eachLine2){
+        secondFileStringList.push_back(eachLine2);
+    }
+
+    if(firstFileStringList.size() != secondFileStringList.size()){
+        file1_.close();
+        file2_.close();
+        return false;
+    }
+    for(int i = 0; i < firstFileStringList.size(); i++){
+        cout << (firstFileStringList[i] == secondFileStringList[i]) << endl;
+        if(firstFileStringList[i] != secondFileStringList[i]){
+            file1_.close();
+            file2_.close();
             return false;
         }
     }
     file1_.close();
     file2_.close();
-
     return true;
 }
 

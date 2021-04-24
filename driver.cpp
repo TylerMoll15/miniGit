@@ -106,8 +106,8 @@ int main(){
                     else{
                         noError = true;
                         int fileVersion = 0;
-
-                        if(!fileEquivalence(".minigit/" + findNewestFile(relevantString), relevantString) || !fs::exists(".minigit/__" + to_string(0) + "__" + relevantString)){
+                        
+                        if(!fs::exists(".minigit/__" + to_string(0) + "__" + relevantString) || !fileEquivalence(".minigit/" + findNewestFile(relevantString), relevantString)){
                             newRepoFileList.addSLLNode(relevantString, "__" + to_string(fileVersion) + "__" + relevantString);
                         }
                         cout << endl;
@@ -139,32 +139,49 @@ int main(){
                 
                 break;
             case 3: //commit
-                newRepo.addDLLNode();
-                newRepo.addHead(newRepo.getNumberOfNodes(), newRepoFileList.getHeadPointer());
                 curr = newRepoFileList.getHeadPointer();
-                newestFile = "";
-                while(curr != nullptr){
-                    if(fs::exists(".minigit/" + curr->fileVersion)){ //file exists in repository
-                        cout << "File Exists!" << endl;
-                        
-                        int versionNumber = 0;
-                        while(fs::exists(".minigit/" + curr->fileVersion)){ //finds what to change current file version to (eg if most recent __0__, this would make curr version __1__)
-                            versionNumber++;
-                            curr->fileVersion = "__" + to_string(versionNumber) + "__" + curr->fileName;
-                        }
 
-                        newestFile = "__" + to_string(versionNumber - 1) + "__" + curr->fileName;
-                        
-                        copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                if(curr != nullptr){
+                    if(newRepo.getNumberOfNodes() <= 1){
+                        newRepo.addHead(newRepo.getNumberOfNodes(), newRepoFileList.getHeadPointer());
                     }
-                    else{ //file version doesn't exist in repository
-                        cout << "File doesn't exist, copying over" << endl;
-                        copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                    while(curr != nullptr){
+                        cout << "curr fileName --> " << curr->fileName << endl;
+                        if(fs::exists(".minigit/" + curr->fileVersion)){ //file exists in repository
+                            cout << endl << "File Exists!" << endl << endl;
+                            
+                            int versionNumber = 0;
+                            while(fs::exists(".minigit/" + curr->fileVersion)){ //finds what to change current file version to (eg if most recent __0__, this would make curr version __1__)
+                                versionNumber++;
+                                curr->fileVersion = "__" + to_string(versionNumber) + "__" + curr->fileName;
+                            }
+
+                            newestFile = "__" + to_string(versionNumber - 1) + "__" + curr->fileName;
+
+                            if(!fileEquivalence(".minigit/" + findNewestFile(relevantString), relevantString)){
+                                copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                            }
+                        }
+                        else{ //file version doesn't exist in repository
+                            cout << "File doesn't exist, copying over" << endl;
+                            copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                        }
+                        curr = curr->next;
                     }
-                    curr = curr->next;
+
+                    //starts setting up next commit, copies LL from previous commit
+                    newRepo.addDLLNode();
+                    SLLnode* curr = newRepoFileList.getHeadPointer();
+                    newRepoFileList.clipHead();
+                    while(curr != nullptr){
+                        newRepoFileList.addSLLNode(curr->fileName, curr->fileVersion);
+                        curr = curr->next;
+                    }
+                    newRepo.addHead(newRepo.getNumberOfNodes(), newRepoFileList.getHeadPointer());
                 }
-                newRepoFileList.clipHead();
-                
+                else{
+                    cout << endl << "Commit empty, nothing to commit!" << endl << endl;
+                }
                 break;
             case 4: //checkout
                 {
@@ -182,10 +199,6 @@ int main(){
                     else{
                         SLLnode* sllcurr = curr->headLL;
                         while(sllcurr != nullptr){
-
-                            // fs::remove(sllcurr->fileName);
-                            // copy(".minigit/" + sllcurr->fileVersion, sllcurr->fileName);
-
                             versionFile.close();
                             versionFile.open(".minigit/" + sllcurr->fileVersion);
                             currentFile.open(sllcurr->fileName);
@@ -204,8 +217,6 @@ int main(){
             case 5: //quit
                 cout << "Bye!" << endl;
                 isRunning = false;
-
-                newRepo.prettyPrint();
                 break;
         }
     }

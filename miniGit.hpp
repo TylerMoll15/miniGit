@@ -33,7 +33,7 @@ class DLL{
     public:
         ~DLL();
         void prettyPrint();
-        string idToName(int commitNumber);
+        SLLnode* idToHeadLL(int commitNumber);
         bool initialSetup();
         bool addDLLNode();
         bool removeNode(int commitNumber);
@@ -55,6 +55,7 @@ class SLL{
         bool addSLLNode(string fileName, string fileVersion);
         bool removeNode(string fileName);
         SLLnode* getHeadPointer(){return head;}
+        SLLnode* listCopy(SLLnode* oldHead);
         void clipHead();
 };
 
