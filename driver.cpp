@@ -139,31 +139,37 @@ int main(){
                 
                 break;
             case 3: //commit
-                newRepo.addDLLNode();
-                newRepo.addHead(newRepo.getNumberOfNodes(), newRepoFileList.getHeadPointer());
                 curr = newRepoFileList.getHeadPointer();
-                newestFile = "";
-                while(curr != nullptr){
-                    if(fs::exists(".minigit/" + curr->fileVersion)){ //file exists in repository
-                        cout << "File Exists!" << endl;
-                        
-                        int versionNumber = 0;
-                        while(fs::exists(".minigit/" + curr->fileVersion)){ //finds what to change current file version to (eg if most recent __0__, this would make curr version __1__)
-                            versionNumber++;
-                            curr->fileVersion = "__" + to_string(versionNumber) + "__" + curr->fileName;
-                        }
 
-                        newestFile = "__" + to_string(versionNumber - 1) + "__" + curr->fileName;
-                        
-                        copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                if(curr != nullptr){
+                    newRepo.addDLLNode();
+                    newRepo.addHead(newRepo.getNumberOfNodes(), newRepoFileList.getHeadPointer());
+                    while(curr != nullptr){
+                        if(fs::exists(".minigit/" + curr->fileVersion)){ //file exists in repository
+                            cout << "File Exists!" << endl;
+                            
+                            int versionNumber = 0;
+                            while(fs::exists(".minigit/" + curr->fileVersion)){ //finds what to change current file version to (eg if most recent __0__, this would make curr version __1__)
+                                versionNumber++;
+                                curr->fileVersion = "__" + to_string(versionNumber) + "__" + curr->fileName;
+                            }
+
+                            newestFile = "__" + to_string(versionNumber - 1) + "__" + curr->fileName;
+                            
+                            copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                        }
+                        else{ //file version doesn't exist in repository
+                            cout << "File doesn't exist, copying over" << endl;
+                            copy(curr->fileName, ".minigit/" + curr->fileVersion);
+                        }
+                        curr = curr->next;
                     }
-                    else{ //file version doesn't exist in repository
-                        cout << "File doesn't exist, copying over" << endl;
-                        copy(curr->fileName, ".minigit/" + curr->fileVersion);
-                    }
-                    curr = curr->next;
+                    newRepoFileList.clipHead();
                 }
-                newRepoFileList.clipHead();
+                else{
+                    cout << endl << endl << "Nothing to commit!" << endl << endl;
+                }
+                
                 
                 break;
             case 4: //checkout
@@ -204,8 +210,6 @@ int main(){
             case 5: //quit
                 cout << "Bye!" << endl;
                 isRunning = false;
-
-                newRepo.prettyPrint();
                 break;
         }
     }
