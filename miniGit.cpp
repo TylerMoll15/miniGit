@@ -130,23 +130,28 @@ string DLL::getLocation(){
 }
 
 DLL::~DLL(){
-    DLLnode* curr = head;
-    DLLnode* prev = nullptr;
+    if (numberOfNodes > 1)
+    {
+        DLLnode *curr = head;
+        DLLnode *prev = nullptr;
 
-    SLLnode* curr_ = nullptr;
-    SLLnode* prev_ = nullptr;
+        SLLnode *curr_ = nullptr;
+        SLLnode *prev_ = nullptr;
 
-    while(curr != nullptr){
-        prev = curr;
-        curr_ = prev->headLL; //deletes SLL in each DLLnode
-        while(curr_ != nullptr){
-            prev_ = curr_;
-            curr_ = curr_->next;
-            delete prev_;
+        while (curr != nullptr)
+        {
+            prev = curr;
+            curr_ = prev->headLL; //deletes SLL in each DLLnode
+            while (curr_ != nullptr)
+            {
+                prev_ = curr_;
+                curr_ = curr_->next;
+                delete prev_;
+            }
+            curr = curr->next;
+
+            delete prev;
         }
-        curr = curr->next;
-
-        delete prev;
     }
 }
 

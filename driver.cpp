@@ -46,6 +46,7 @@ int main(){
     bool isRunning = true;
     bool inCheckout = false;
     bool freshCommit = false;
+    bool initialized = false;
     SLLnode* curr;
     ofstream fileVersion;
     ofstream currentFile;
@@ -63,9 +64,11 @@ int main(){
 
         if(initAnswer == "y"){
             newRepo.initialSetup();
+            initialized = true;
             validAnswer = true;
         }
         else if(initAnswer == "n"){
+            initialized = false;
             validAnswer = true;
         }
         else{
@@ -84,7 +87,8 @@ int main(){
 
         switch(choice){
             case 1: //add file
-                if(!inCheckout){
+                if(initialized)
+                {if(!inCheckout){
                     while(!noError && relevantString != "q"){
                         addDuplicate = false;
                         relevantString = easyQuestion("What file do you want to add? (enter relative file path or 'q' to go to the menu)");
@@ -124,10 +128,11 @@ int main(){
                 }
                 else{
                     cout << endl << endl << "You're in an earlier commit, you can't change the past!" << endl << endl; 
-                }
+                }}
                 break;
             case 2: //remove file
-                if(!inCheckout){
+                if(initialized)
+                {if(!inCheckout){
                     while(!valid && relevantString != "q"){
                         valid = false;
                         relevantString = easyQuestion("Which file would you like to remove?");
@@ -152,10 +157,11 @@ int main(){
                 }
                 else{
                     cout << endl << endl << "You're in an earlier commit, you can't change the past!" << endl << endl; 
-                }   
+                }   }
                 break;
             case 3: //commit
-                if(!inCheckout){
+                if(initialized)
+                {if(!inCheckout){
                     curr = newRepoFileList.getHeadPointer();
                     if(curr != nullptr){
                         newRepo.addDLLNode();
@@ -186,10 +192,11 @@ int main(){
                 }
                 else{
                     cout << endl << endl << "You're in an earlier commit, you can't change the past!" << endl << endl; 
-                }
+                }}
                 break;
             case 4: //checkout
-                {
+                if(initialized)
+                {{
                     relevantString = easyQuestion("Enter a commit number");
 
                     DLLnode* curr = newRepo.getHeadPointer();
@@ -232,7 +239,7 @@ int main(){
                             inCheckout = true;
                         }
                     }
-                }
+                }}
                 break;
             case 5: //quit
                 cout << "Bye!" << endl;
