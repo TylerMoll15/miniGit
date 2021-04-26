@@ -41,7 +41,6 @@ void choiceSelection(int& choice){
 
 
 int main(){
-    vector<string> fileList;
     DLL newRepo;
     SLL newRepoFileList;
     bool isRunning = true;
@@ -85,41 +84,6 @@ int main(){
 
         switch(choice){
             case 1: //add file
-                // if(freshCommit){
-                //     for(int i = 0; i < fileList.size(); i++){
-                //         addDuplicate = false;
-                //         relevantString = fileList[i];
-
-                //         SLLnode* dupCheck = newRepoFileList.getHeadPointer();
-                //         while(dupCheck != nullptr && dupCheck->fileName != relevantString){ //iterates through current added file list, stops on duplicate or end of LL
-                //             dupCheck = dupCheck->next;
-                //         }
-
-                //         if(dupCheck != nullptr){
-                //             addDuplicate = true;
-                //         }
-
-                //         if(!fs::exists(relevantString) && relevantString != "q"){
-                //             cout << endl << endl << "File does not exist. Enter a valid File" << endl;
-                //             noError = false;
-                //         }
-                //         else if(addDuplicate){
-                //             cout << endl << "File has already been added. Enter a valid file" << endl;
-                //         }
-                //         else{
-                //             noError = true;
-                //             int fileVersion = 0;
-                            
-                //             if(!fs::exists(".minigit/__" + to_string(0) + "__" + relevantString) || !fileEquivalence(".minigit/" + findNewestFile(relevantString), relevantString)){
-                //                 newRepoFileList.addSLLNode(relevantString, "__" + to_string(fileVersion) + "__" + relevantString);
-                //             }
-                //             else{
-                //                 cout << endl << endl << "File not added, no changes since most recent version" << endl << endl;
-                //             }
-                //             cout << endl;
-                //         }
-                //     }
-                // }
                 if(!inCheckout){
                     while(!noError && relevantString != "q"){
                         addDuplicate = false;
@@ -145,9 +109,11 @@ int main(){
                             noError = true;
                             int fileVersion = 0;
                             
-                            if(!fs::exists(".minigit/__" + to_string(0) + "__" + relevantString) || !fileEquivalence(".minigit/" + findNewestFile(relevantString), relevantString)){
+                            if(relevantString == "q"){
+
+                            }
+                            else if(!fs::exists(".minigit/__" + to_string(0) + "__" + relevantString) || !fileEquivalence(".minigit/" + findNewestFile(relevantString), relevantString)){
                                 newRepoFileList.addSLLNode(relevantString, "__" + to_string(fileVersion) + "__" + relevantString);
-                                fileList.push_back(relevantString);
                             }
                             else{
                                 cout << endl << endl << "File not added, no changes since most recent version" << endl << endl;
@@ -232,8 +198,12 @@ int main(){
                         curr = curr->next;
                     }
 
+                    if(relevantString == "0"){
+                        cout << endl << endl << "Commit doesn't exist" << endl << endl;
+                    }
+
                     string warnAnswer = "y";
-                    if(!inCheckout && curr != nullptr){
+                    if(!inCheckout && curr != nullptr && relevantString != "0"){
                         warnAnswer = easyQuestion("Any uncommitted changes will be destroyed, are you sure you want to continue? (any answer besides 'y' will cancel the checkout)");
                     }
 
