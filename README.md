@@ -5,7 +5,7 @@ OPENING INITILIZATION:
 Once the file is opened, you will be prompted will the following question:
 Do you want to initialize a new repository? (y/n)
 
-Entering "y" will delete all files in the .minigit folder in your current directory, and create a fresh .minigit folder
+Entering "y" will delete all files in the .minigit folder in your current directory, and create a fresh .minigit folder.
 Entering "n" will not change the current .minigit folder, but no persistence has been encoded into this program so the old data structures will not be loaded. If no repo has been initialized, none of the options will do anything.
 
 
